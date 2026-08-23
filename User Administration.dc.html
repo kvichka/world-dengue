@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/tokens/colors.css">
+<link rel="stylesheet" href="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/tokens/typography.css">
+<link rel="stylesheet" href="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/styles.css">
+<script src="_ds/chai-design-system-eb475a38-cb32-41b6-a2ce-822ca75afe8d/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700&display=swap">
+<style>
+body{margin:0;background:#EEF1F4;font-family:'Noto Sans Khmer','Trebuchet MS',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-synthesis:none}
+a{color:#117996}a:hover{color:#0d6177}
+button,input,select{font-family:inherit}
+button,a,input,select{transition:background-color .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease}
+</style>
+<meta name="ext-resource-dependency" content="geo.json" data-resource-id="geoJson">
+<template id="__bundler_thumbnail" data-bg-color="#003E78">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="800" fill="#003E78"></rect><g transform="translate(600 400)" fill="none" stroke="#6EDBCD" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"><circle cx="0" cy="-70" r="70"></circle><path d="M-140 150a140 140 0 0 1 280 0"></path></g></svg>
+</template>
+</helmet>
+
+<sc-if value="{{ loadingViewer }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;background:#EEF1F4;display:flex;align-items:center;justify-content:center;padding:40px 20px;font:400 13px/1.6 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Checking your account…</div>
+</sc-if>
+
+<sc-if value="{{ denied }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;background:#EEF1F4;display:flex;align-items:center;justify-content:center;padding:40px 20px">
+<div style="max-width:440px;background:#fff;border:1px solid #D9DEE4;border-radius:10px;box-shadow:0 2px 8px rgba(0,62,120,.08);padding:24px;display:flex;flex-direction:column;gap:12px;text-align:center">
+<div style="font:600 18px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">សម្រាប់តែអ្នកគ្រប់គ្រង</div>
+<sc-if value="{{ noSession }}" hint-placeholder-val="{{ true }}">
+<div style="font:400 13px/1.6 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">No one is signed in on this device. Open the field app and sign in with an Admin account to manage users.</div>
+</sc-if>
+<sc-if value="{{ deniedAs }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 13px/1.6 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#767676">User administration is restricted to the Admin role. You are signed in as {{ deniedAs }}.</div>
+</sc-if>
+<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+<a href="Field App Screens.dc.html" style="min-height:46px;display:flex;align-items:center;padding:0 18px;border-radius:6px;background:#003E78;color:#fff;text-decoration:none;font:700 13px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#002b53" style-active="background:#00203f">Go to the field app</a>
+<sc-if value="{{ noSession }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ useDemoAdmin }}" style="min-height:46px;padding:0 16px;border:1px solid #117996;border-radius:6px;background:#fff;color:#117996;cursor:pointer;font:600 13px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF">View as demo admin</button>
+</sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ allowed }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100%;background:#EEF1F4;display:flex;flex-direction:column">
+
+<sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+<div style="background:#003E78;color:#fff;padding:16px 20px;padding-top:{{ headTop }};display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+<a href="{{ backHref }}" aria-label="back to the field app" style="flex:none;width:38px;height:38px;border-radius:6px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;text-decoration:none" style-hover="background:rgba(255,255,255,.26)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></a>
+<div style="flex:1;min-width:200px">
+<div style="font:600 20px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
+<div style="font:400 11px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:rgba(213,231,239,.9);letter-spacing:.05em;text-transform:uppercase">User administration · vector surveillance · CHAI</div>
+</div>
+<div style="flex:none;display:flex;align-items:center;gap:8px">
+<div style="text-align:right">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif">{{ adminName }}</div>
+<div style="font:400 10px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:rgba(213,231,239,.9)">National admin · all provinces</div>
+</div>
+<div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font:700 13px/1 'Trebuchet MS','Noto Sans Khmer',sans-serif">{{ adminInitials }}</div>
+</div>
+</div>
+</sc-if>
+
+<div style="padding:18px 20px 28px;display:flex;flex-direction:column;gap:14px;max-width:1180px;width:100%;box-sizing:border-box;margin:0 auto">
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+<div style="background:#fff;border:1px solid #D9DEE4;border-radius:8px;box-shadow:0 2px 8px rgba(0,62,120,.08);padding:8px 11px;display:flex;align-items:baseline;gap:7px">
+<div style="flex:none;font:700 18px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:{{ s.color }}">{{ s.n }}</div>
+<div style="flex:1;min-width:0;font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">{{ s.label }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="background:#fff;border:1px solid #D9DEE4;border-radius:10px;box-shadow:0 2px 8px rgba(0,62,120,.08);padding:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<div style="flex:2;min-width:200px;display:flex;align-items:center;gap:8px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;min-height:44px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m16.2 16.2 4.3 4.3"></path></svg>
+<input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Search name, username, cluster" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font:400 14px 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#333;height:42px" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+</div>
+<select value="{{ roleFilter }}" onChange="{{ setRoleFilter }}" style="flex:1;min-width:130px;min-height:44px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;background:#fff;color:#003E78;font:600 13px 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<option value="">All roles</option>
+<sc-for list="{{ roleOptions }}" as="r" hint-placeholder-count="4">
+<option value="{{ r }}">{{ r }}</option>
+</sc-for>
+</select>
+<select value="{{ provFilter }}" onChange="{{ setProvFilter }}" style="flex:1;min-width:150px;min-height:44px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;background:#fff;color:#003E78;font:400 13px 'Noto Sans Khmer','Trebuchet MS',sans-serif" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<option value="">All provinces</option>
+<sc-for list="{{ provinces }}" as="p" hint-placeholder-count="6">
+<option value="{{ p.code }}">{{ p.label }}</option>
+</sc-for>
+</select>
+<select value="{{ statusFilter }}" onChange="{{ setStatusFilter }}" style="flex:1;min-width:130px;min-height:44px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;background:#fff;color:#003E78;font:600 13px 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<option value="">All statuses</option>
+<option value="active">Active</option>
+<option value="pending">Pending first sign-in</option>
+<option value="off">Deactivated</option>
+</select>
+<button onClick="{{ exportCsv }}" style="flex:none;min-height:44px;padding:0 14px;border:1px solid #117996;border-radius:6px;background:#fff;color:#117996;cursor:pointer;font:600 13px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF"><span style="display:inline-flex;align-items:center;justify-content:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#117996" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0 4-4m-4 4-4-4M4 18v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1"></path></svg>Export CSV</span></button>
+<button onClick="{{ newUser }}" style="flex:none;min-height:44px;padding:0 16px;border:none;border-radius:6px;background:#003E78;color:#fff;cursor:pointer;font:700 13px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#002b53" style-active="background:#00203f"><span style="display:inline-flex;align-items:center;justify-content:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>New user</span></button>
+</div>
+
+<sc-if value="{{ noMatch }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px dashed #B5BFC9;border-radius:10px;padding:26px;text-align:center;font:400 13px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">No user matches these filters.</div>
+</sc-if>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;align-items:start">
+<sc-for list="{{ users }}" as="u" hint-placeholder-count="6">
+<div style="background:#fff;border:1px solid #D9DEE4;border-top:3px solid {{ u.accent }};border-radius:10px;box-shadow:0 2px 8px rgba(0,62,120,.08);overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;align-items:flex-start;gap:8px;padding:11px 11px 9px">
+<span title="{{ u.statusLabel }}" style="flex:none;margin-top:5px;width:11px;height:11px;border-radius:50%;background:{{ u.statusDot }};box-shadow:0 0 0 3px {{ u.statusBg }}"></span>
+<div style="flex:1;min-width:0">
+<div style="font:600 14px/1.45 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.nameKm }}</div>
+<div style="font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.username }}</div>
+</div>
+<button onClick="{{ u.remove }}" aria-label="delete user" title="Delete user" style="flex:none;width:30px;height:30px;border:1px solid #EEF1F4;border-radius:6px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:#F7E6E8">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7C1220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"></path></svg>
+</button>
+</div>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:0 11px 10px">
+<span style="font:700 9px/1.6 'Trebuchet MS',sans-serif;color:#98A2AD;letter-spacing:.08em;text-transform:uppercase">Role</span>
+<span style="min-width:0;font:600 11px/1.6 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.role }}</span>
+<span style="font:700 9px/1.6 'Trebuchet MS',sans-serif;color:#98A2AD;letter-spacing:.08em;text-transform:uppercase">Area</span>
+<span style="min-width:0;font:400 11px/1.6 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#333">{{ u.place }}</span>
+<span style="font:700 9px/1.6 'Trebuchet MS',sans-serif;color:#98A2AD;letter-spacing:.08em;text-transform:uppercase">Status</span>
+<span style="min-width:0;font:600 11px/1.6 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:{{ u.statusFg }}">{{ u.statusLabel }}</span>
+</div>
+<button onClick="{{ u.toggle }}" style="border:none;border-top:1px solid #EEF1F4;background:#F7FAFC;cursor:pointer;padding:0 11px;min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left" style-hover="background:#D5E7EF">
+<span style="font:600 11px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#117996">{{ u.detailsLabel }}</span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#117996" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ u.chev }}"></path></svg>
+</button>
+<sc-if value="{{ u.open }}" hint-placeholder-val="{{ false }}">
+<div style="padding:10px 11px 11px;display:flex;flex-direction:column;gap:8px;background:#F7FAFC;border-top:1px solid #EEF1F4">
+<div style="font:400 11px/1.6 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#767676">{{ u.villagesLine }}</div>
+<div style="font:400 11px/1.6 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">{{ u.lastLine }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button onClick="{{ u.edit }}" style="flex:1;min-width:80px;min-height:40px;border:1px solid #B5BFC9;border-radius:6px;background:#fff;color:#003E78;cursor:pointer;font:600 12px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF">Edit</button>
+<button onClick="{{ u.resetPin }}" style="flex:1;min-width:96px;min-height:40px;border:1px solid #B5BFC9;border-radius:6px;background:#fff;color:#117996;cursor:pointer;font:600 12px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF">Reset PIN</button>
+<button onClick="{{ u.toggleActive }}" style="flex:1;min-width:104px;min-height:40px;border:1px solid {{ u.toggleBorder }};border-radius:6px;background:#fff;color:{{ u.toggleFg }};cursor:pointer;font:600 12px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF">{{ u.toggleLabel }}</button>
+</div>
+<sc-if value="{{ u.resetOpen }}" hint-placeholder-val="{{ false }}">
+<div style="border:1px solid #D9DEE4;border-radius:8px;background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px">
+<div style="font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Set a new 4-digit PIN for {{ u.username }}</div>
+<div style="display:flex;gap:6px">
+<input value="{{ resetPinValue }}" onChange="{{ setResetPin }}" inputMode="numeric" placeholder="0000" style="flex:1;min-width:0;box-sizing:border-box;min-height:42px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;font:700 16px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#003E78;letter-spacing:.3em">
+<button onClick="{{ generateResetPin }}" style="flex:none;min-height:42px;padding:0 12px;border:1px solid #117996;border-radius:6px;background:#fff;color:#117996;cursor:pointer;font:600 12px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif">Generate</button>
+<button onClick="{{ u.confirmReset }}" disabled="{{ resetDisabled }}" style="flex:none;min-height:42px;padding:0 14px;border:none;border-radius:6px;background:{{ resetBg }};color:#fff;cursor:pointer;font:700 12px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif">Set</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ u.showTempPin }}" hint-placeholder-val="{{ false }}">
+<div style="background:#FDF1D1;border-left:4px solid #F4B71B;border-radius:6px;padding:8px 10px;font:400 11px/1.6 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#4a3400">PIN set to <strong style="font:700 14px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#003E78">{{ u.tempPin }}</strong> — share it in person.</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+
+</div>
+</div>
+
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end">
+<div onClick="{{ closeEdit }}" style="position:absolute;inset:0;background:rgba(0,26,50,.45)"></div>
+<div style="position:relative;width:min(460px,100%);height:100%;background:#fff;box-shadow:-8px 0 28px rgba(0,62,120,.24);display:flex;flex-direction:column">
+<div style="background:#003E78;color:#fff;padding:16px 18px;display:flex;align-items:center;gap:10px">
+<div style="flex:1;min-width:0">
+<div style="font:600 17px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif">{{ formTitleKm }}</div>
+<div style="font:400 10px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:rgba(213,231,239,.9);letter-spacing:.05em;text-transform:uppercase">{{ formTitleEn }}</div>
+</div>
+<button onClick="{{ closeEdit }}" aria-label="close" style="width:36px;height:36px;flex:none;border:none;border-radius:6px;background:rgba(255,255,255,.14);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:rgba(255,255,255,.26)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+
+<div style="flex:1;min-height:0;overflow:auto;padding:16px 18px 20px;display:flex;flex-direction:column;gap:14px">
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">ឈ្មោះពេញ <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Full name</span></div>
+<input value="{{ fName }}" onChange="{{ setFName }}" style="box-sizing:border-box;min-height:46px;border:1px solid #B5BFC9;border-radius:6px;padding:0 12px;font:400 15px 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#333" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+</div>
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">ឈ្មោះអ្នកប្រើ <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Username</span></div>
+<input value="{{ fUser }}" onChange="{{ setFUser }}" placeholder="firstname.l" style="box-sizing:border-box;min-height:46px;border:1px solid #B5BFC9;border-radius:6px;padding:0 12px;font:400 15px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#333" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<sc-if value="{{ userTaken }}" hint-placeholder-val="{{ false }}">
+<div style="font:600 11px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#7C1220">That username already exists.</div>
+</sc-if>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">តួនាទី <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Role</span></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ roleChoices }}" as="r" hint-placeholder-count="4">
+<button onClick="{{ r.press }}" style="flex:1;min-width:110px;min-height:44px;border:1px solid {{ r.border }};border-radius:6px;background:{{ r.bg }};color:{{ r.fg }};cursor:pointer;font:600 12px/1.3 'Noto Sans Khmer','Trebuchet MS',sans-serif">{{ r.label }}</button>
+</sc-for>
+</div>
+<div style="font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">{{ rolePermissions }}</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">ខេត្ត <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Province</span></div>
+<select value="{{ fProvince }}" onChange="{{ setFProvince }}" style="box-sizing:border-box;min-height:46px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;background:#fff;color:#003E78;font:400 15px 'Noto Sans Khmer','Trebuchet MS',sans-serif" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<option value="">ជ្រើសរើសខេត្ត</option>
+<sc-for list="{{ provinces }}" as="p" hint-placeholder-count="6">
+<option value="{{ p.code }}">{{ p.label }}</option>
+</sc-for>
+</select>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">ស្រុក / ចង្កោម <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Operational district · cluster</span></div>
+<select value="{{ fDistrict }}" onChange="{{ setFDistrict }}" disabled="{{ districtLocked }}" style="box-sizing:border-box;min-height:46px;border:1px solid #B5BFC9;border-radius:6px;padding:0 10px;background:{{ districtBg }};color:#003E78;font:400 15px 'Noto Sans Khmer','Trebuchet MS',sans-serif" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<option value="">{{ districtPlaceholder }}</option>
+<sc-for list="{{ districts }}" as="d" hint-placeholder-count="5">
+<option value="{{ d.code }}">{{ d.label }}</option>
+</sc-for>
+</select>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:baseline;gap:8px">
+<div style="flex:1;font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">ភូមិទទួលបន្ទុក <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Assigned villages</span></div>
+<div style="flex:none;font:400 11px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">{{ villageCount }}</div>
+</div>
+<sc-if value="{{ villagesLocked }}" hint-placeholder-val="{{ true }}">
+<div style="border:1px dashed #B5BFC9;border-radius:6px;padding:14px;text-align:center;font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Pick a district first.</div>
+</sc-if>
+<sc-if value="{{ villagesReady }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:6px;flex-wrap:wrap;max-height:190px;overflow:auto;border:1px solid #EEF1F4;border-radius:6px;padding:8px">
+<sc-for list="{{ villageChips }}" as="v" hint-placeholder-count="8">
+<button onClick="{{ v.press }}" style="min-height:36px;padding:0 12px;border:1px solid {{ v.border }};border-radius:18px;background:{{ v.bg }};color:{{ v.fg }};cursor:pointer;font:600 12px/1.3 'Noto Sans Khmer','Trebuchet MS',sans-serif">{{ v.label }}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:5px">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">លេខសម្ងាត់ដំបូង <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">{{ pinFieldHint }}</span></div>
+<div style="display:flex;gap:8px">
+<input value="{{ fPin }}" onChange="{{ setFPin }}" inputMode="numeric" placeholder="4 digits" style="flex:1;min-width:0;box-sizing:border-box;min-height:46px;border:1px solid #B5BFC9;border-radius:6px;padding:0 12px;font:700 16px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#003E78;letter-spacing:.3em" style-focus="border-color:#117996;box-shadow:0 0 0 3px rgba(17,121,150,.18);outline:none">
+<button onClick="{{ generatePin }}" style="flex:none;min-height:46px;padding:0 14px;border:1px solid #117996;border-radius:6px;background:#fff;color:#117996;cursor:pointer;font:600 12px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF">Generate</button>
+</div>
+<sc-if value="{{ pinInvalid }}" hint-placeholder-val="{{ false }}">
+<div style="font:600 11px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#7C1220">PIN must be exactly 4 digits.</div>
+</sc-if>
+</div>
+
+<div style="display:flex;align-items:center;gap:10px;border:1px solid #D9DEE4;border-radius:8px;padding:12px">
+<div style="flex:1">
+<div style="font:600 13px/1.5 'Noto Sans Khmer','Trebuchet MS',sans-serif;color:#003E78">គណនីសកម្ម <span style="font:400 10px 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Account active</span></div>
+<div style="font:400 11px/1.4 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#767676">Deactivated users cannot sign in; their submitted data stays.</div>
+</div>
+<button onClick="{{ toggleFActive }}" aria-label="toggle active" style="flex:none;width:56px;height:32px;border:none;border-radius:16px;background:{{ activeTrack }};cursor:pointer;padding:3px;display:flex;justify-content:{{ activeJustify }}">
+<span style="width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);display:block"></span>
+</button>
+</div>
+
+<sc-if value="{{ isNew }}" hint-placeholder-val="{{ true }}">
+<div style="background:#D5E7EF;border-left:4px solid #003E78;border-radius:6px;padding:10px 12px;font:400 11px/1.5 'Trebuchet MS','Noto Sans Khmer',sans-serif;color:#003E78">A temporary PIN is generated when you save. The collector needs a connection for their first sign-in, then the profile caches on their device.</div>
+</sc-if>
+</div>
+
+<div style="border-top:1px solid #D9DEE4;padding:12px 18px;display:flex;gap:8px">
+<button onClick="{{ closeEdit }}" style="flex:1;min-height:48px;border:1px solid #B5BFC9;border-radius:6px;background:#fff;color:#003E78;cursor:pointer;font:600 14px/1.3 'Trebuchet MS','Noto Sans Khmer',sans-serif" style-hover="background:#D5E7EF"><span style="display:inline-flex;align-items:center;justify-content:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003E78" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>Cancel</span></button>
+<button onClick="{{ saveUser }}" disabled="{{ saveDisabled }}" style="flex:2;min-height:48px;border:none;border-radius:6px;background:{{ saveBg }};color:#fff;cursor:pointer;font:600 14px/1.3 'Noto Sans Khmer','Trebuchet MS',sans-serif"><span style="display:inline-flex;align-items:center;justify-content:center;gap:8px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>{{ saveLabel }}</span></button>
+</div>
+</div>
+</div>
+</sc-if>
+
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:70;background:#003E78;color:#fff;border-radius:8px;box-shadow:0 6px 20px rgba(0,62,120,.3);padding:12px 18px;font:600 13px/1.4 'Noto Sans Khmer','Trebuchet MS',sans-serif">{{ toast }}</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:900},&quot;platform&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;web&quot;,&quot;ios&quot;,&quot;android&quot;],&quot;default&quot;:&quot;web&quot;,&quot;tsType&quot;:&quot;'web' | 'ios' | 'android'&quot;},&quot;embedded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const ROLES = [
+  { key: 'Collector', perms: 'Registers households, runs all five field stages on their assigned villages.' },
+  { key: 'Lab technician', perms: 'Enters lab results for samples from any cluster; no field forms.' },
+  { key: 'Supervisor', perms: 'Sees every household in their operational district, can re-open a stage and export data.' },
+  { key: 'Admin', perms: 'Full national access: creates users, assigns roles and areas, resets PINs, exports everything.' },
+];
+
+const SEED = [
+  { id: 1, nameKm: 'សុខា ព្រំ', username: 'sokha.p', role: 'Collector', province: '02', district: '0203', villages: ['0203100400', '0203100200'], active: true, signedIn: true, last: '23 Aug · 08:31' },
+  { id: 2, nameKm: 'ដារ៉ា ខេង', username: 'dara.k', role: 'Collector', province: '02', district: '0201', villages: ['0201060400'], active: true, signedIn: false, last: '' },
+  { id: 3, nameKm: 'វិជ្ជា សុខ', username: 'vichea.s', role: 'Supervisor', province: '02', district: '', villages: [], active: true, signedIn: true, last: '22 Aug · 17:04' },
+  { id: 4, nameKm: 'ចាន់ថា លី', username: 'chantha.l', role: 'Lab technician', province: '12', district: '', villages: [], active: true, signedIn: true, last: '23 Aug · 07:12' },
+  { id: 5, nameKm: 'រតនា ម៉េង', username: 'ratana.m', role: 'Collector', province: '02', district: '0203', villages: ['0203100100', '0203100300'], active: false, signedIn: true, last: '11 Aug · 15:22' },
+];
+
+class Component extends DCLogic {
+  state = {
+    geo: null, users: SEED, nextId: 6, seeded: false,
+    query: '', roleFilter: '', provFilter: '', statusFilter: '',
+    editing: null, form: null, toast: '', tempPins: {}, viewer: undefined, demoAdmin: false,
+    resetFor: null, resetPin: '', openUser: null,
+  };
+
+  componentDidMount() {
+    fetch((window.__resources && window.__resources.geoJson) || 'geo.json')
+      .then((r) => r.json()).then((geo) => this.setState({ geo })).catch(() => {});
+    import('./users.js').then((m) => {
+      this.dir = m;
+      const users = m.loadUsers();
+      this.setState({ users, nextId: m.nextId(users), viewer: this.resolveViewer(users) });
+    }).catch(() => {});
+    this.recheck = () => {
+      if (!this.dir) return;
+      const users = this.dir.loadUsers();
+      this.setState({ users, viewer: this.resolveViewer(users) });
+    };
+    this.onStorage = (e) => {
+      if (!e.key || e.key === 'vs.session.v1' || (this.dir && e.key === this.dir.USERS_KEY)) this.recheck();
+    };
+    window.addEventListener('storage', this.onStorage);
+    window.addEventListener('pageshow', this.recheck);
+    document.addEventListener('visibilitychange', this.recheck);
+  }
+
+  componentWillUnmount2() { window.removeEventListener('storage', this.onStorage); }
+
+  mutate = (fn) => this.setState((prev) => {
+    const users = fn(prev.users);
+    if (this.dir) this.dir.saveUsers(users);
+    return { users };
+  });
+
+  componentWillUnmount() {
+    clearTimeout(this.toastT);
+    window.removeEventListener('storage', this.onStorage);
+    window.removeEventListener('pageshow', this.recheck);
+    document.removeEventListener('visibilitychange', this.recheck);
+  }
+
+  resolveViewer(users) {
+    try {
+      const raw = window.localStorage.getItem('vs.session.v1');
+      if (!raw) return null;
+      const id = JSON.parse(raw).id;
+      return users.find((u) => u.id === id) || null;
+    } catch (e) { return null; }
+  }
+
+  flash(msg) {
+    clearTimeout(this.toastT);
+    this.setState({ toast: msg });
+    this.toastT = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  label(list, code) {
+    const g = this.state.geo;
+    if (!g || !code) return '';
+    const row = g[list].find((r) => r[0] === code);
+    return row ? row[1] : '';
+  }
+
+  blank() {
+    return { id: null, nameKm: '', username: '', pin: '', role: 'Collector', province: '', district: '', villages: [], active: true, signedIn: false, last: '' };
+  }
+
+  statusOf(u) {
+    if (!u.active) return 'off';
+    return u.signedIn ? 'active' : 'pending';
+  }
+
+  renderVals() {
+    const s = this.state;
+    const geo = s.geo;
+    const f = s.form;
+    const provinces = geo ? geo.p.map((r) => ({ code: r[0], label: r[1] })) : [];
+    const districts = geo && f && f.province ? geo.d.filter((r) => r[2] === f.province).map((r) => ({ code: r[0], label: r[1] })) : [];
+    const villages = geo && f && f.district
+      ? geo.c.filter((r) => r[2] === f.district).reduce((acc, c) => acc.concat(geo.v.filter((v) => v[2] === c[0])), [])
+      : [];
+
+    const q = s.query.trim().toLowerCase();
+    const shown = s.users.filter((u) => {
+      const place = (this.label('p', u.province) + ' ' + this.label('d', u.district)).toLowerCase();
+      const okQ = !q || u.nameKm.toLowerCase().indexOf(q) !== -1 || u.username.indexOf(q) !== -1 || place.indexOf(q) !== -1;
+      const okR = !s.roleFilter || u.role === s.roleFilter;
+      const okP = !s.provFilter || u.province === s.provFilter;
+      const okS = !s.statusFilter || this.statusOf(u) === s.statusFilter;
+      return okQ && okR && okP && okS;
+    });
+
+    const statusMeta = {
+      active: { label: 'Active', dot: '#1a7f4f', bg: '#E2F3EA', fg: '#14603c', accent: '#1ED47F' },
+      pending: { label: 'Pending sign-in', dot: '#F4B71B', bg: '#FDF1D1', fg: '#6b4d00', accent: '#F4B71B' },
+      off: { label: 'Deactivated', dot: '#7C1220', bg: '#F7E6E8', fg: '#7C1220', accent: '#B5BFC9' },
+    };
+
+    const nameTaken = !!(f && s.users.some((u) => u.username === f.username.trim() && u.id !== f.id));
+
+    return {
+      headTop: this.props.platform === 'ios' ? '58px' : this.props.platform === 'android' ? '42px' : '16px',
+      showChrome: !this.props.embedded,
+      backHref: this.props.embedded ? '#' : 'Field App Screens.dc.html',
+      allowed: !!(s.demoAdmin || (s.viewer && s.viewer.role === 'Admin')),
+      denied: !s.demoAdmin && s.viewer !== undefined && !(s.viewer && s.viewer.role === 'Admin'),
+      loadingViewer: s.viewer === undefined && !s.demoAdmin,
+      noSession: !s.viewer,
+      deniedAs: s.viewer ? s.viewer.username + ' · ' + s.viewer.role : '',
+      useDemoAdmin: () => this.setState({ demoAdmin: true }),
+      adminName: s.viewer ? s.viewer.nameKm : 'Demo admin',
+      adminInitials: s.viewer ? s.viewer.username.slice(0, 2).toUpperCase() : 'DA',
+
+      stats: [
+        { n: s.users.length, label: 'Users provisioned', color: '#003E78' },
+        { n: s.users.filter((u) => this.statusOf(u) === 'active').length, label: 'Active', color: '#1a7f4f' },
+        { n: s.users.filter((u) => this.statusOf(u) === 'pending').length, label: 'Pending first sign-in', color: '#8a6400' },
+        { n: s.users.filter((u) => !u.active).length, label: 'Deactivated', color: '#7C1220' },
+      ],
+
+      query: s.query, setQuery: (e) => this.setState({ query: e.target.value }),
+      roleFilter: s.roleFilter, setRoleFilter: (e) => this.setState({ roleFilter: e.target.value }),
+      provFilter: s.provFilter, setProvFilter: (e) => this.setState({ provFilter: e.target.value }),
+      statusFilter: s.statusFilter, setStatusFilter: (e) => this.setState({ statusFilter: e.target.value }),
+      roleOptions: ROLES.map((r) => r.key),
+      provinces: provinces,
+      noMatch: shown.length === 0,
+
+      users: shown.map((u) => {
+        const st = statusMeta[this.statusOf(u)];
+        const prov = this.label('p', u.province);
+        const dist = this.label('d', u.district);
+        return {
+          nameKm: u.nameKm, username: u.username, role: u.role,
+          place: !geo ? '…' : (dist ? dist + ', ' + prov : prov || 'no area assigned'),
+          villagesLine: !geo ? 'loading gazetteer…' : u.villages.length
+            ? u.villages.length + ' village' + (u.villages.length > 1 ? 's' : '') + ' · ' + u.villages.map((v) => this.label('v', v)).filter(Boolean).join(', ')
+            : (u.role === 'Collector' ? 'No villages assigned yet' : 'District-wide access'),
+          lastLine: u.signedIn ? 'Last active ' + u.last : 'Never signed in — needs a connection for first sign-in',
+          statusLabel: st.label, statusDot: st.dot, statusBg: st.bg, statusFg: st.fg, accent: st.accent,
+          toggleLabel: u.active ? 'Deactivate' : 'Reactivate',
+          toggleFg: u.active ? '#7C1220' : '#1a7f4f',
+          toggleBorder: u.active ? '#e0c2c6' : '#bfe3ce',
+          showTempPin: !!s.tempPins[u.id], tempPin: s.tempPins[u.id] || '',
+          edit: () => this.setState({ editing: 'edit', form: { ...u, villages: [...u.villages] } }),
+          open: s.openUser === u.id,
+          chev: s.openUser === u.id ? 'M6 15l6-6 6 6' : 'm6 9 6 6 6-6',
+          detailsLabel: s.openUser === u.id ? 'Hide details' : 'Details & actions',
+          toggle: () => this.setState((prev) => ({ openUser: prev.openUser === u.id ? null : u.id, resetFor: null })),
+          resetOpen: s.resetFor === u.id,
+          resetPin: () => this.setState((prev) => ({ resetFor: prev.resetFor === u.id ? null : u.id, resetPin: '', openUser: u.id })),
+          confirmReset: () => {
+            const pin = s.resetPin;
+            if (!/^[0-9]{4}$/.test(pin)) return;
+            this.setState((prev) => ({ tempPins: { ...prev.tempPins, [u.id]: pin }, resetFor: null, resetPin: '' }));
+            this.mutate((list) => list.map((x) => (x.id === u.id ? { ...x, pin, signedIn: false } : x)));
+            this.flash('PIN set for ' + u.username);
+          },
+          toggleActive: () => {
+            this.mutate((list) => list.map((x) => (x.id === u.id ? { ...x, active: !x.active } : x)));
+            this.flash((u.active ? 'Deactivated ' : 'Reactivated ') + u.username);
+          },
+          remove: () => {
+            this.mutate((list) => list.filter((x) => x.id !== u.id));
+            this.setState((prev) => ({ openUser: prev.openUser === u.id ? null : prev.openUser, resetFor: null }));
+            this.flash('Deleted ' + u.username);
+          },
+        };
+      }),
+
+      resetPinValue: s.resetPin,
+      setResetPin: (e) => this.setState({ resetPin: e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }),
+      generateResetPin: () => this.setState({ resetPin: String(Math.floor(1000 + Math.random() * 9000)) }),
+      resetDisabled: !/^[0-9]{4}$/.test(s.resetPin),
+      resetBg: /^[0-9]{4}$/.test(s.resetPin) ? '#117996' : '#B5BFC9',
+
+      exportCsv: () => {
+        const head = 'name,username,role,province,district,villages,status,last_active';
+        const rows = shown.map((u) => [u.nameKm, u.username, u.role, this.label('p', u.province), this.label('d', u.district), u.villages.map((v) => this.label('v', v)).join(' | '), this.statusOf(u), u.last].map((c) => '"' + String(c).replace(/"/g, '""') + '"').join(','));
+        const blob = new Blob([head + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'surveillance-users.csv';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+        this.flash('Exported ' + shown.length + ' users');
+      },
+      newUser: () => this.setState({ editing: 'new', form: this.blank() }),
+
+      editing: !!s.editing,
+      isNew: s.editing === 'new',
+      formTitleKm: s.editing === 'new' ? 'បង្កើតអ្នកប្រើថ្មី' : 'កែសម្រួលអ្នកប្រើ',
+      formTitleEn: s.editing === 'new' ? 'Create user' : 'Edit user',
+      closeEdit: () => this.setState({ editing: null, form: null }),
+
+      fName: f ? f.nameKm : '',
+      setFName: (e) => this.setState((prev) => ({ form: { ...prev.form, nameKm: e.target.value } })),
+      fUser: f ? f.username : '',
+      setFUser: (e) => this.setState((prev) => ({ form: { ...prev.form, username: e.target.value.toLowerCase().replace(/[^a-z0-9.]/g, '') } })),
+      userTaken: nameTaken,
+
+      roleChoices: ROLES.map((r) => ({
+        label: r.key,
+        bg: f && f.role === r.key ? '#003E78' : '#fff',
+        fg: f && f.role === r.key ? '#fff' : '#003E78',
+        border: f && f.role === r.key ? '#003E78' : '#B5BFC9',
+        press: () => this.setState((prev) => ({ form: { ...prev.form, role: r.key } })),
+      })),
+      rolePermissions: f ? (ROLES.find((r) => r.key === f.role) || {}).perms : '',
+
+      fProvince: f ? f.province : '',
+      setFProvince: (e) => this.setState((prev) => ({ form: { ...prev.form, province: e.target.value, district: '', villages: [] } })),
+      fDistrict: f ? f.district : '',
+      setFDistrict: (e) => this.setState((prev) => ({ form: { ...prev.form, district: e.target.value, villages: [] } })),
+      districts: districts,
+      districtLocked: !(f && f.province) || !geo,
+      districtBg: !(f && f.province) || !geo ? '#F2F2F2' : '#fff',
+      districtPlaceholder: f && f.province ? 'ជ្រើសរើសស្រុក' : '—',
+
+      villagesLocked: !(f && f.district),
+      villagesReady: !!(f && f.district),
+      villageCount: f && f.villages.length ? f.villages.length + ' selected' : 'none selected',
+      villageChips: villages.map((v) => {
+        const on = !!(f && f.villages.indexOf(v[0]) !== -1);
+        return {
+          label: v[1],
+          bg: on ? '#D5E7EF' : '#fff',
+          fg: '#003E78',
+          border: on ? '#117996' : '#D9DEE4',
+          press: () => this.setState((prev) => {
+            const has = prev.form.villages.indexOf(v[0]) !== -1;
+            return { form: { ...prev.form, villages: has ? prev.form.villages.filter((x) => x !== v[0]) : [...prev.form.villages, v[0]] } };
+          }),
+        };
+      }),
+
+      fPin: f ? (f.pin || '') : '',
+      setFPin: (e) => this.setState((prev) => ({ form: { ...prev.form, pin: e.target.value.replace(/[^0-9]/g, '').slice(0, 4) } })),
+      generatePin: () => this.setState((prev) => ({ form: { ...prev.form, pin: String(Math.floor(1000 + Math.random() * 9000)) } })),
+      pinFieldHint: s.editing === 'new' ? 'Initial PIN · give it to the user in person' : 'Change the PIN, or leave as is',
+      pinInvalid: !!(f && f.pin && !/^[0-9]{4}$/.test(f.pin)),
+
+      activeTrack: f && f.active ? '#117996' : '#B5BFC9',
+      activeJustify: f && f.active ? 'flex-end' : 'flex-start',
+      toggleFActive: () => this.setState((prev) => ({ form: { ...prev.form, active: !prev.form.active } })),
+
+      saveDisabled: !f || !f.nameKm.trim() || !f.username.trim() || nameTaken || !!(f.pin && !/^[0-9]{4}$/.test(f.pin)),
+      saveBg: !f || !f.nameKm.trim() || !f.username.trim() || nameTaken || (f.pin && !/^[0-9]{4}$/.test(f.pin)) ? '#B5BFC9' : '#117996',
+      saveLabel: s.editing === 'new' ? 'បង្កើតគណនី · Create account' : 'រក្សាទុក · Save changes',
+      saveUser: () => {
+        if (!f || !f.nameKm.trim() || !f.username.trim() || nameTaken) return;
+        if (f.pin && !/^[0-9]{4}$/.test(f.pin)) return;
+        if (s.editing === 'new') {
+          const id = s.nextId;
+          const pin = f.pin || String(Math.floor(1000 + Math.random() * 9000));
+          this.mutate((list) => [...list, { ...f, id, pin, username: f.username.trim(), signedIn: false, last: '' }]);
+          this.setState((prev) => ({ nextId: id + 1, tempPins: { ...prev.tempPins, [id]: pin }, editing: null, form: null }));
+          this.flash('Created ' + f.username + ' · PIN ' + pin);
+        } else {
+          this.mutate((list) => list.map((u) => (u.id === f.id ? { ...u, ...f, pin: f.pin || u.pin, signedIn: f.pin && f.pin !== u.pin ? false : u.signedIn, username: f.username.trim() } : u)));
+          this.setState({ editing: null, form: null });
+          this.flash('Saved ' + f.username);
+        }
+      },
+
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
