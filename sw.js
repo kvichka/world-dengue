@@ -1,5 +1,5 @@
 // Vector Surveillance field app — offline shell
-const VERSION = 'ento-v9';
+const VERSION = 'ento-v10';
 const ASSETS = [
   "./",
   "index.html",

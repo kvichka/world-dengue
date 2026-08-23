@@ -891,6 +891,8 @@ const GEO = [
 const EMPTY_ROUND = { install: 0, larvae: 0, adult: 0, collect: 0, lab: 0 };
 
 class Component extends DCLogic {
+  SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjW6vYwKYYTeK83MLcY0_cg6skNlSLDBXtSYi3LwqmZO_irsAwBeXdQU7kKO5uNTb8ZQ/exec';
+
   state = {
     loggedIn: false, username: 'sokha.p', pin: '', loginError: null,
     screen: 'list', history: [], hhIdx: 0, online: false, pulling: false, pullMsg: '', lang: 'km', menuOpen: false,
@@ -1042,8 +1044,38 @@ class Component extends DCLogic {
   }
 
   send = (id) => {
-    this.setState((s) => ({ queue: s.queue.map((q) => (q.id === id ? { ...q, state: 'sending' } : q)) }));
-    setTimeout(() => this.setState((s) => ({ queue: s.queue.map((q) => (q.id === id ? { ...q, state: 'sent', meta: q.meta.replace(/waiting|failed/, 'sent') } : q)) })), 700);
+    const q = this.state.queue.find((x) => x.id === id);
+    if (!q) return;
+    this.setState((s) => ({ queue: s.queue.map((x) => (x.id === id ? { ...x, state: 'sending' } : x)) }));
+    const mark = (state) => this.setState((s) => ({
+      queue: s.queue.map((x) => (x.id === id
+        ? { ...x, state, meta: x.meta.replace(/waiting|failed|sent/, state === 'sent' ? 'sent' : 'failed') }
+        : x)),
+    }));
+    const rec = {
+      type: q.stage || 'other',
+      hhId: q.hh,
+      month: q.month,
+      collector: (this.state.session && this.state.session.username) || '',
+      date: new Date().toISOString().slice(0, 10),
+      title: q.title,
+    };
+    const h = this.state.households.find((x) => x.id === q.hh);
+    if (h) {
+      const d = (h.data && h.data[q.month]) || {};
+      ['inspected', 'positive', 'larvTubes', 'specimens', 'eggs', 'aeg', 'alb'].forEach((k) => {
+        if (d[k] != null) rec[k] = d[k];
+      });
+    }
+    fetch(this.SHEET_URL, {
+      method: 'POST',
+      // text/plain keeps the request simple so Apps Script answers without a CORS preflight
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ records: [rec] }),
+    })
+      .then((r) => r.json())
+      .then((res) => mark(res && res.ok ? 'sent' : 'failed'))
+      .catch(() => mark('failed'));
   };
 
   record(patch) {
@@ -1646,7 +1678,7 @@ class Component extends DCLogic {
       pullSheet: () => {
         if (!s.online || s.pulling) return;
         this.setState({ pulling: true, pullMsg: '' });
-        fetch((window.__resources && window.__resources.entoSeed) || 'ento-seed.json')
+        fetch(this.SHEET_URL, { cache: 'no-store' })
           .then((r) => r.json())
           .then((d) => this.setState({
             households: d.households || [],
