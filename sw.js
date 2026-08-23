@@ -1,10 +1,11 @@
 // Vector Surveillance field app — offline shell
-const VERSION = 'ento-v1';
+const VERSION = 'ento-v2';
 const ASSETS = [
   "./",
   "index.html",
   "User%20Administration.dc.html",
   "support.js",
+  "users.js",
   "geo.json",
   "ento-seed.json",
   "app-icon-180.png",

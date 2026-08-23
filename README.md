@@ -16,6 +16,7 @@ HTTPS is required for the service worker; GitHub Pages provides it.
 | index.html | The app |
 | User Administration.dc.html | Admin console, loaded on demand |
 | support.js | Runtime |
+| users.js | User directory (accounts, PINs, roles) |
 | geo.json | Cambodia gazetteer |
 | ento-seed.json | Household seed data — replace to change the dataset |
 | _ds/… | CHAI design system: tokens, styles, fonts |
@@ -28,3 +29,14 @@ The Sheet pull reads `ento-seed.json`. To point it at Apps Script, edit `index.h
 
 ## Updating
 Bump `VERSION` in `sw.js` on every deploy, otherwise phones keep serving the cached build.
+
+## Accounts
+All PINs are `1234`.
+
+| Username | Role |
+|---|---|
+| admin | Admin — sees user administration |
+| vichea.s | Supervisor — can pull from Sheet |
+| sokha.p, dara.k | Collector |
+| chantha.l | Lab technician |
+| ratana.m | Collector, deactivated |
